@@ -75,16 +75,47 @@ services:
       - ./webolith:/opt/webolith:rw
     working_dir: /opt/webolith
     command: yarn dev:wds
-    expose:
-      - 7000
     networks:
       - aeronet
     labels:
       - traefik.backend=webpack_webolith
-      - "traefik.webpack_webolith.frontend.rule=Host: vm.aerolith.org;PathPrefix: /static/dist/"
+      - "traefik.webpack_webolith.frontend.rule=Host: vm.aerolith.org;PathPrefix: /static/dist/,/sockjs-node/"
       - traefik.port=7000
       - traefik.enable=true
-    # environment:
+
+  crosswords:
+    build: ./liwords
+    working_dir: /opt/liwords/liwords_ex
+    volumes:
+      - ./liwords:/opt/liwords:rw
+    depends_on:
+      - pgdb
+    links:
+      - pgdb
+    command: mix phx.server
+    networks:
+      - aeronet
+    labels:
+      - "traefik.backend=crosswords"
+      - "traefik.crosswords.frontend.rule=Host: vm.aerolith.org;PathPrefix: /crosswords"
+      - traefik.port=4000
+      - traefik.enable=true
+
+  webpack_crosswords:
+    build:
+      context: ./liwords
+      dockerfile: webpack.dockerfile
+    volumes:
+      - ./liwords:/opt/liwords:rw
+    working_dir: /opt/liwords
+    command: yarn dev:wds
+    networks:
+      - aeronet
+    labels:
+      - traefik.backend=webpack_webolith
+      - "traefik.webpack_webolith.frontend.rule=Host: vm.aerolith.org;PathPrefix: /crosswords/static/dist/,/sockjs-node/"
+      - traefik.port=7000
+      - traefik.enable=true
 
 
 volumes:
