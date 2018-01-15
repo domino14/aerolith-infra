@@ -1,0 +1,96 @@
+version: "3"
+
+services:
+  pgdb:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - pg-data-volume:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - 5437:5432
+    networks:
+      aeronet:
+
+  app:
+    env_file:
+      - ./webolith/config/local_config.env
+    build: ./webolith
+    working_dir: /opt/webolith/djAerolith
+    volumes:
+      - ./webolith:/opt/webolith:rw
+      - ./webolith/db:/db
+    depends_on:
+      - pgdb
+      - redis
+    links:
+      - pgdb
+    command: python manage.py runserver 0.0.0.0:8000
+    networks:
+      - aeronet
+    labels:
+      - "traefik.backend=webolith"
+      - "traefik.webolith.frontend.rule=Host: vm.aerolith.org"
+      - traefik.port=8000
+      - traefik.enable=true
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6384:6379
+    networks:
+      - aeronet
+
+  proxy:
+    image: traefik:alpine
+    command: --web --docker --docker.watch --docker.domain=aerolith.org \
+      --logLevel=DEBUG --entryPoints='Name:http Address::80' \
+      --defaultEntryPoints='http'
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    networks:
+      - aeronet
+
+  macondo:
+    build: ./macondo
+    volumes:
+      - ./macondo/dawgs:/dawgs
+    command: ./macondo -dawgpath=/dawgs/
+    ports:
+      - 8088:8088
+    networks:
+      - aeronet
+
+  webpack_webolith:
+    build:
+      context: ./webolith
+      dockerfile: webpack.dockerfile
+    volumes:
+      - ./webolith:/opt/webolith:rw
+    working_dir: /opt/webolith
+    command: yarn dev:wds
+    expose:
+      - 7000
+    networks:
+      - aeronet
+    labels:
+      - traefik.backend=webpack_webolith
+      - "traefik.webpack_webolith.frontend.rule=Host: vm.aerolith.org;PathPrefix: /static/dist/"
+      - traefik.port=7000
+      - traefik.enable=true
+    # environment:
+
+
+volumes:
+  pg-data-volume:
+    external: false
+
+networks:
+  aeronet:
+    driver: bridge
