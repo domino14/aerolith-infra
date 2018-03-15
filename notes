@@ -1,0 +1,7 @@
+- create config file for webolith (local_config.env)
+- need to run mix deps.get
+  - docker-compose build crosswords
+  - docker-compose run --rm crosswords mix deps.get
+- need to do yarn in both webpack containers
+  - docker-compose build <webpack container name>
+  - docker-compose run --rm <webpack container name> yarn
