@@ -2,7 +2,7 @@ This repository contains the infrastructure of the Aerolith project. In order to
 
 #### Components
 
-Aerolith requires a number of components to run on your development machine. 
+Aerolith requires a number of components to run on your development machine.
 
 - Webapp: `github.com/domino14/webolith`  (1)
     + This is the main Aerolith web app, written in Python + Django. It contains other apps within it besides Wordwalls: the old flashcards (Whitley Cards) and the new flashcards program (aerolith.org/cards)
@@ -23,17 +23,32 @@ Aerolith requires a number of components to run on your development machine.
 
 #### Instructions
 
-- For now, you must clone the 4 repos above (labeled 1 - 4) to your computer. I may automate this later. Ideally put them within this folder, or you can also symlink them here. The paths must match what's in the docker compose file:
-    + webolith
-    + macondo
-    + word_db_maker
-    + liwords
-- Download Docker for <Your operating system here>
+- Before running the `setup.sh` script, ensure you have the right lexicon files on your computer. I can't legally provide them, but there should be text files with the words and an optional definition:
+
+```
+AA some type of lava
+AB an abdomen
+AARDVARK a funny animal
+```
+
+Put these text files in the `lexica` directory. For now, they should be named `America.txt`, `CSW15.txt`, `FISE.txt`. You don't need all of them to have Aerolith run but it might be crippled if you try to select a lexicon you don't have.
+
+- Download and install Docker for <Your operating system here>
+
+- If you create a Docker Hub account, you must logout of it via the command line with `docker logout`. This is a bizarre issue with Docker: https://github.com/docker/hub-feedback/issues/1098
+(You can't pull containers otherwise.)
+
+- Run `setup.sh`. This will clone the 4 repos above, build your lexicon databases, install all required Javascript and initialize your postgres database, among other tasks.
+
 - Add `vm.aerolith.org` to your `etc/hosts` file. The entry should look something like this, depending on your Docker settings.
 
 ```
 127.0.0.1   localhost vm.aerolith.org
 ```
 
-- Run `docker-compose up -d`.
+- Run `docker-compose up -d` in this directory
 - You can now access the web app on your web browser at `vm.aerolith.org`
+
+### Debugging
+
+- Run `docker-compose logs -f app` to see the logs for app (the main webolith app). You can replace app with another component, like `crosswords`, `webpack_webolith`, etc.
