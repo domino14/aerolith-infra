@@ -1,0 +1,1 @@
+Lexica should go in this directory. For more information, see the instructions in the top-level README.md
