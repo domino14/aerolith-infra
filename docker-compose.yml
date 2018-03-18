@@ -4,6 +4,8 @@ services:
   pgdb:
     image: postgres
     environment:
+      POSTGRES_DB: djaerolith
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: pass
     volumes:
       - pg-data-volume:/var/lib/postgresql/data
@@ -21,7 +23,7 @@ services:
     working_dir: /opt/webolith/djAerolith
     volumes:
       - ./webolith:/opt/webolith:rw
-      - ./webolith/db:/db
+      - ./lexica/db:/db
     depends_on:
       - pgdb
       - redis
@@ -60,7 +62,9 @@ services:
   macondo:
     build: ./macondo
     volumes:
-      - ./macondo/dawgs:/dawgs
+      - ./lexica/dawg:/dawgs
+      - ./lexica/gaddag:/gaddags
+      - ./lexica:/lexica
     command: ./macondo -dawgpath=/dawgs/
     ports:
       - 8088:8088
@@ -85,6 +89,10 @@ services:
 
   crosswords:
     build: ./liwords
+    environment:
+      # Must match Django secret key. See setup.sh, where that is set.
+      # On prod obviously this will be handled differently.
+      DJANGO_SECRET_KEY: 0gc6=82_ehrw-@fv1a8dqq^6%zuxxu)f^5belgu68cuu*zr&qu
     working_dir: /opt/liwords/liwords_ex
     volumes:
       - ./liwords:/opt/liwords:rw

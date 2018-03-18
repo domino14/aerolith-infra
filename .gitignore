@@ -4,3 +4,6 @@ webolith
 word_db_maker
 
 lexica/*.txt
+lexica/dawg/*.dawg
+lexica/gaddag/*.gaddag
+lexica/db/*.db
