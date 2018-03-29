@@ -32,7 +32,7 @@ docker-compose up -d macondo
 
 echo "Creating DAWGs and GADDAGs from lexica files..."
 
-for lex in "America.txt" "CSW15.txt" "FISE.txt"
+for lex in "America.txt" "CSW15.txt" "FISE09.txt"
 do
     # Strip out extension.
     lex_name=${lex%.*}
