@@ -7,3 +7,5 @@ lexica/*.txt
 lexica/dawg/*.dawg
 lexica/gaddag/*.gaddag
 lexica/db/*.db
+
+.vscode

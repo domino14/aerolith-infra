@@ -38,7 +38,7 @@ do
     lex_name=${lex%.*}
 
     # Send an RPC command to Macondo to build DAWGs from these lexicon files.
-    json_builder='{"jsonrpc":"2.0","method":"GaddagService.%s","params":{"filename":"%s","minimize":true},"id":%s}'
+    json_builder='{"jsonrpc":"2.0","method":"GaddagService.%s","params":{"filename":"%s","minimize":true,"authToken":"abcdef"},"id":%s}'
 
     # If the lexicon text file exists, generate a dawg and a goddamn for it.
     if [ -f $cwd/lexica/$lex ]; then

@@ -61,15 +61,20 @@ services:
 
   macondo:
     build: ./macondo
+    environment:
+      AUTH_KEY: abcdef
     volumes:
       - ./lexica/dawg:/dawgs
       - ./lexica/gaddag:/gaddags
       - ./lexica:/lexica
     command: ./macondo -dawgpath=/dawgs/
-    ports:
-      - 8088:8088
     networks:
       - aeronet
+    labels:
+      - "traefik.backend=macondo"
+      - "traefik.macondo.frontend.rule=Host: vm.aerolith.org;PathPrefixStrip: /macondo/"
+      - traefik.port=8088
+      - traefik.enable=true
 
   webpack_webolith:
     build:

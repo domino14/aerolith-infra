@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-static-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webolith
+        component: nginx
+    spec:
+      containers:
+      - image: domino14/webolith-nginx:None
+        imagePullPolicy: Never
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - rm /usr/share/nginx/html/50x.html && sleep 15 && /usr/sbin/nginx -s
+                quit
+        name: nginx
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /usr/share/nginx/html/50x.html
+          failureThreshold: 2
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          successThreshold: 1
