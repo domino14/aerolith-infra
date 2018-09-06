@@ -3,7 +3,7 @@ import os
 from fabric.api import env, local, execute
 
 try:
-    from kubernetes.build_configs import build
+    from kubernetes.build_configs import build, build_macondo
 except ImportError:
     # In case we are in a container and we want to run fab.
     # Note the container doesn't get the k8s stuff copied to it.
@@ -23,12 +23,24 @@ def create_k8s_configs(role):
     execute(_create_k8s_configs, role)
 
 
+def create_k8s_configs_macondo(role):
+    execute(_create_k8s_configs_macondo, role)
+
+
 def _create_k8s_configs(role):
     build(role)
 
 
+def _create_k8s_configs_macondo(role):
+    build_macondo(role)
+
+
 def deploy(role):
     execute(_deploy, role)
+
+
+def deploy_macondo(role):
+    execute(_deploy_macondo, role)
 
 
 def _deploy(role):
@@ -47,6 +59,15 @@ def _deploy(role):
         '{0}-nginx-static-deployment'.format(role),
         'nginx-static-service',
         '{0}-webolith-maintenance'.format(role),
-        # these should seldom if ever be restarted. We can do this manually.
     ]:
         local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
+
+
+def _deploy_macondo(role):
+    for f in [
+        '{0}-macondo-deployment'.format(role),
+        'macondo-service',
+        '{0}-macondo-secrets'.format(role)
+    ]:
+        local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
+

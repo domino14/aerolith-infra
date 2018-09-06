@@ -47,6 +47,11 @@ def build(role):
     build_webolith_ingress(role)
 
 
+def build_macondo(role):
+    build_macondo_secret(role)
+    build_macondo_deployment(role)
+
+
 def get_env_var(role, var, secret=False):
     key = (role + '_' + var).upper()
     env_var = os.getenv(key)
@@ -67,6 +72,16 @@ def build_webolith_secret(role):
                      'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET']:
         secret_template['data'][var_name] = get_env_var(role, var_name, True)
     with open('kubernetes/deploy-configs/{role}-webolith-secrets.yaml'.format(
+            role=role), 'w') as f:
+        f.write(yaml.dump(secret_template, default_flow_style=False))
+
+
+def build_macondo_secret(role):
+    with open('kubernetes/deploy-configs/macondo-secrets.yaml') as f:
+        secret_template = yaml.load(f)
+    for var_name in ['AUTH_KEY']:
+        secret_template['data'][var_name] = get_env_var(role, var_name, True)
+    with open('kubernetes/deploy-configs/{role}-macondo-secrets.yaml'.format(
             role=role), 'w') as f:
         f.write(yaml.dump(secret_template, default_flow_style=False))
 
@@ -138,7 +153,7 @@ def build_macondo_deployment(role):
     with open('kubernetes/deploy-configs/macondo-deployment.yaml') as f:
         template = f.read()
     context = {
-        'MACONDO_BUILD_NUM': os.getenv('MACONDO_BUILD_NUM'),
+        'MACONDO_BUILD_NUM': os.getenv('CIRCLE_SHA1'),
         'DAWG_PATH': os.getenv('DAWG_PATH'),
     }
     rendered = curlies_render(template, context)
