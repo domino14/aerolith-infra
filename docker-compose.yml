@@ -60,14 +60,16 @@ services:
       - aeronet
 
   macondo:
-    build: ./macondo
+    build:
+      context: ./macondo
+      dockerfile: Dockerfile-dev
     environment:
       AUTH_KEY: abcdef
     volumes:
       - ./lexica/dawg:/dawgs
       - ./lexica/gaddag:/gaddags
       - ./lexica:/lexica
-    command: ./macondo -dawgpath=/dawgs/
+    command: go run main.go -dawgpath=/dawgs/
     networks:
       - aeronet
     labels:
