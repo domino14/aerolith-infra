@@ -69,6 +69,7 @@ services:
       - ./lexica/dawg:/dawgs
       - ./lexica/gaddag:/gaddags
       - ./lexica:/lexica
+      - ./macondo:/go/src/github.com/domino14/macondo:rw
     command: go run main.go -dawgpath=/dawgs/
     networks:
       - aeronet
