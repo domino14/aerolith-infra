@@ -4,6 +4,7 @@ metadata:
   name: webolith-ingress
   annotations:
     nginx.org/websocket-services: "webolith"
+    nginx.org/rewrites: "serviceName=macondo rewrite=/"
 spec:
   backend:
     # The default backend.
@@ -25,6 +26,10 @@ spec:
         backend:
           serviceName: nginx-static-svc
           servicePort: 80
+      - path: /macondo/
+        backend:
+          serviceName: macondo
+          servicePort: 8088
       - path: {{ HACK_PATH }}
         backend:
           serviceName: nginx-static-svc
