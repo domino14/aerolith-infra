@@ -13,4 +13,4 @@ After
 - [ ] Container for webpack-related stuff
 - [x] Fix docker-compose configs. (? or remove and use Minikube?)
     - Minikube kinda sucks because its clock is way off. Maybe it's an xhyve thing.
-- [ ] Figure out automatic SSL renewing through LetsEncrypt
+- [x] Figure out automatic SSL renewing through LetsEncrypt

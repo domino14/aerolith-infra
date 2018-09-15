@@ -59,11 +59,11 @@ The macondo service and deployment is separate from the webolith repo.
 
 ### ingress
 
-We are using the publicly available nginxinc ingress controller. We do SSL termination in `webolith-ingress.yaml`, see `secret-tls.yaml`. The controller configs are in `nginx-ingress-rc.yaml`.
+We are using the publicly available nginxinc ingress controller. We do SSL termination in `webolith-ingress.yaml`. The controller configs are in `nginx-ingress-rc.yaml`.
 
 The ingress directs traffic to `webolith` and `nginx-static` services based on the path.
 
-No solution yet for automatic updating of the TLS secrets. I may need to script LetsEncrypt.
+Automatic SSL renewal through `cert-manager`; `see ssl-renew-notes.md`
 
 ## Deployment
 
@@ -73,4 +73,4 @@ DB migrations should be done manually in the DB. Hopefully these will be rare. O
 
 ## Maintenance
 
-We have a daily maintenance script in `dailyCleanup.sh`. It is executed with Kubernetes's task support.
+We have a daily maintenance script in webolith's `dailyCleanup.sh`. It is executed with Kubernetes's task support.

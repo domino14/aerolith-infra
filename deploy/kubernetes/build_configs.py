@@ -35,8 +35,6 @@ def build(role):
     repository. That will change so rarely that we can probably deal with
     it manually.
 
-    For `secret-tls.yaml` we need another strategy. This one should be
-    built by a daemon or crontab on the cluster itself off of letsencrypt.
 
     """
 
