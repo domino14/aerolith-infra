@@ -13,15 +13,11 @@ spec:
   tls:
   - hosts:
     - {{ HOST_NAME }}
-    secretName: tls-secret
+    secretName: webolith-crt-secret
   rules:
   - host: {{ HOST_NAME }}
     http:
       paths:
-      - path: /.well-known
-        backend:
-          serviceName: nginx-static-svc
-          servicePort: 80
       - path: /static
         backend:
           serviceName: nginx-static-svc
@@ -30,14 +26,3 @@ spec:
         backend:
           serviceName: macondo
           servicePort: 8088
-      - path: {{ HACK_PATH }}
-        backend:
-          serviceName: nginx-static-svc
-          servicePort: 80
-      # May have to make this websocket-only -- i.e. keep using gunicorn,
-      # but daphne just for this.
-      # - path: /wordwalls-socket
-      #   backend:
-      #     serviceName: webolith
-      #     servicePort: 8000
-
