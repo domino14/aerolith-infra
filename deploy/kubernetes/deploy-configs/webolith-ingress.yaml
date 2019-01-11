@@ -11,11 +11,25 @@ spec:
     serviceName: webolith
     servicePort: 8000
   tls:
+  # XXX: This is no longer generic; need to make a generic version
+  # that will work with other hosts in the future.
   - hosts:
-    - {{ HOST_NAME }}
+    - aerolith.org
+    - www.aerolith.org
     secretName: webolith-crt-secret
   rules:
-  - host: {{ HOST_NAME }}
+  - host: www.aerolith.org
+    http:
+      paths:
+      - path: /static
+        backend:
+          serviceName: nginx-static-svc
+          servicePort: 80
+      - path: /macondo
+        backend:
+          serviceName: macondo
+          servicePort: 8088
+  - host: aerolith.org
     http:
       paths:
       - path: /static
