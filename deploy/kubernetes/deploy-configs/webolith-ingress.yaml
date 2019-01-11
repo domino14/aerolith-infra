@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: webolith-ingress
   annotations:
-    nginx.org/websocket-services: "webolith"
     nginx.org/rewrites: "serviceName=macondo rewrite=/"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
 spec:
   backend:
     # The default backend.
