@@ -3,7 +3,8 @@ kind: Ingress
 metadata:
   name: webolith-ingress
   annotations:
-    nginx.org/rewrites: "serviceName=macondo rewrite=/"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
 spec:
   backend:
@@ -22,7 +23,7 @@ spec:
         backend:
           serviceName: nginx-static-svc
           servicePort: 80
-      - path: /macondo/
+      - path: /macondo/?(.*)
         backend:
           serviceName: macondo
           servicePort: 8088

@@ -59,7 +59,11 @@ The macondo service and deployment is separate from the webolith repo.
 
 ### ingress
 
-We are using the publicly available nginxinc ingress controller. We do SSL termination in `webolith-ingress.yaml`. The controller configs are in `nginx-ingress-rc.yaml`.
+Nginx ingress controller installed with helm:
+
+`helm install stable/nginx-ingress --namespace kube-system --set controller.hostNetwork=true,controller.kind=DaemonSet`
+
+We do SSL termination in `webolith-ingress.yaml`.
 
 The ingress directs traffic to `webolith` and `nginx-static` services based on the path.
 
