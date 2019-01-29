@@ -39,6 +39,7 @@ def build(role):
     """
 
     build_webolith_secret(role)
+    build_webolith_migrate(role)
     build_webolith_deployment(role)
     build_webolith_maintenance(role)
     build_nginx_static_deployment(role)
@@ -100,6 +101,21 @@ def build_webolith_deployment(role):
     rendered = curlies_render(template, context)
     with open(
         'kubernetes/deploy-configs/{role}-{name}'.format(
+            role=role, name=name), 'w') as f:
+        f.write(rendered)
+
+
+def build_webolith_migrate(role):
+    name = 'webolith-migrate-job.yaml'
+    with open('kubernetes/deploy-configs/{}'.format(name)) as f:
+        template = f.read()
+
+    context = {}
+    for var_name in ['PGSQL_DB_NAME', 'PGSQL_USER']:
+        context[var_name] = get_env_var(role, var_name)
+    context['BUILD_NUM'] = os.getenv('CIRCLE_SHA1', '')
+    rendered = curlies_render(template, context)
+    with open('kubernetes/deploy-configs/{role}-{name}'.format(
             role=role, name=name), 'w') as f:
         f.write(rendered)
 

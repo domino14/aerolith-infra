@@ -51,6 +51,13 @@ def _deploy(role):
     # To deploy,
     # kubectl --kubeconfig admin.conf apply -f whatever.yaml
     # etc.
+    f = '{0}-webolith-migrate-job'.format(role)
+    local('kubectl delete --ignore-not-found=true job webolith-migrate')
+    local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
+    # Only proceed if the job was successful.
+    local('kubectl wait --for=condition=complete --timeout=30s '
+          'job/webolith-migrate')
+
     for f in [
         '{0}-webolith-secrets'.format(role),
         '{0}-webolith-worker-deployment'.format(role),

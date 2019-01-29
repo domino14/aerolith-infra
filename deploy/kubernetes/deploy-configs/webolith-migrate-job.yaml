@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: webolith-migrate
+spec:
+  template:
+    spec:
+      containers:
+        - name: webolith-migrate-container
+          image: domino14/webolith:{{ BUILD_NUM }}
+          command:
+          - ./manage.py
+          - migrate
+
+          env:
+            - name: DEBUG
+              value: 'off'
+            - name: DEBUG_JS
+              value: 'off'
+            - name: PGSQL_DB_NAME
+              value: {{ PGSQL_DB_NAME }}
+            - name: PGSQL_USER
+              value: {{ PGSQL_USER }}
+
+            # Secrets follow
+            - name: PGSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: webolith-secrets
+                  key: PGSQL_PASSWORD
+            - name: PGSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: webolith-secrets
+                  key: PGSQL_HOST
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: webolith-secrets
+                  key: DJANGO_SECRET_KEY
+
+      restartPolicy: Never
+  backoffLimit: 2
