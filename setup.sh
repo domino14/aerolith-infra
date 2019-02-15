@@ -32,7 +32,7 @@ docker-compose up -d macondo
 
 echo "Creating DAWGs and GADDAGs from lexica files..."
 
-for lex in "America.txt" "CSW15.txt" "FISE09.txt"
+for lex in "NWL18.txt" "CSW15.txt" "FISE2.txt"
 do
     # Strip out extension.
     lex_name=${lex%.*}
@@ -62,9 +62,8 @@ docker build -t domino14/word_db_maker -f word_db_maker/Dockerfile word_db_maker
 
 docker run --rm \
     -v $cwd/lexica:/lexica \
-    -v $cwd/lexica/gaddag:/gaddag \
     -v $cwd/lexica/db:/db \
-    -e LEXICON_PATH=/lexica/ -e GADDAG_PATH=/gaddag/ \
+    -e LEXICON_PATH=/lexica/ \
     domino14/word_db_maker ./word_db_maker -outputdir /db
 
 # GOTO_1
@@ -106,7 +105,7 @@ sleep 5
 docker-compose build app
 docker-compose run --rm app ./manage.py migrate
 docker-compose run --rm app ./manage.py createcachetable
-docker-compose run --rm app ./manage.py loaddata test/lexica.json
+docker-compose run --rm app ./manage.py loaddata test/lexica.yaml
 docker-compose run --rm app ./manage.py loaddata dcNames
 # Run yarn in both webpack containers
 
