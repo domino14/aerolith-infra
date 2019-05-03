@@ -10,7 +10,7 @@ echo "Checking out initial repos. Ensure you have an ssh key registered with git
 
 cwd=$(pwd)
 
-for repo in "webolith" "macondo" "word_db_maker" "liwords"
+for repo in "webolith" "macondo" "word_db_server" "liwords"
 do
     if [ ! -d $cwd/$repo ]; then
         git clone git@github.com:domino14/$repo
@@ -58,13 +58,13 @@ docker-compose stop macondo
 
 echo "Creating word databases"
 
-docker build -t domino14/word_db_maker -f word_db_maker/Dockerfile word_db_maker
+docker build -t domino14/word_db_server -f word_db_server/Dockerfile word_db_server
 
 docker run --rm \
     -v $cwd/lexica:/lexica \
     -v $cwd/lexica/db:/db \
     -e LEXICON_PATH=/lexica/ \
-    domino14/word_db_maker ./word_db_maker -outputdir /db
+    domino14/word_db_server ./word_db_server -outputdir /db
 
 # GOTO_1
 

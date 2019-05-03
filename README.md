@@ -10,8 +10,8 @@ Aerolith requires a number of components to run on your development machine.
 - Macondo: `github.com/domino14/macondo`  (2)
     + This is a helper app that is used for blank bingo generation, build challenges, and finding word anagrams (in the flashcards app.) It is written in Go.
 
-- Word DB maker: `github.com/domino14/word_db_maker`  (3)
-    + Used to make the initial word databases / lexica from lexicon files. Whilst I cannot distribute the lexicon files myself due to copyright restrictions, these can be downloaded from several places, and `word_db_maker` can create the lexica.
+- Word DB server: `github.com/domino14/word_db_server`  (3)
+    + Used to make the initial word databases / lexica from lexicon files. Whilst I cannot distribute the lexicon files myself due to copyright restrictions, these can be downloaded from several places, and `word_db_server` can create the lexica.
 
 - Postgres: The postgres database (plain docker package)
 - Redis: Used for Django Channels (plain docker package)
