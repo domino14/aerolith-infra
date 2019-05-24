@@ -12,6 +12,7 @@ Aerolith requires a number of components to run on your development machine.
 
 - Word DB server: `github.com/domino14/word_db_server`  (3)
     + Used to make the initial word databases / lexica from lexicon files. Whilst I cannot distribute the lexicon files myself due to copyright restrictions, these can be downloaded from several places, and `word_db_server` can create the lexica.
+    + Used for any word-related server functionality (WIP). This will include any word searches, anything related to words basically.
 
 - Postgres: The postgres database (plain docker package)
 - Redis: Used for Django Channels (plain docker package)
