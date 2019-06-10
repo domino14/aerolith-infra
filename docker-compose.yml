@@ -79,6 +79,24 @@ services:
       - traefik.port=8088
       - traefik.enable=true
 
+  word_db_server:
+    build:
+      context: ./word_db_server
+    environment:
+      LEXICON_PATH: /lexica
+      LOG_LEVEL: debug
+    volumes:
+      - ./lexica:/lexica
+      - ./word_db_server:/go/src/github.com/domino14/word_db_server:rw
+    command: go run cmd/searchserver/main.go
+    networks:
+      - aeronet
+    labels:
+      - "traefik.backend=word_db_server"
+      - "traefik.word_db_server.frontend.rule=Host: vm.aerolith.org;PathPrefixStrip: /word_db_server/"
+      - traefik.port=8180
+      - traefik.enable=true
+
   webpack_webolith:
     build:
       context: ./webolith
