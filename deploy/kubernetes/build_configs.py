@@ -46,9 +46,8 @@ def build(role):
     build_webolith_ingress(role)
 
 
-def build_macondo(role):
-    build_macondo_secret(role)
-    build_macondo_deployment(role)
+def build_word_db_server(role):
+    build_word_db_server_deployment(role)
 
 
 def get_env_var(role, var, secret=False):
@@ -71,16 +70,6 @@ def build_webolith_secret(role):
                      'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET']:
         secret_template['data'][var_name] = get_env_var(role, var_name, True)
     with open('kubernetes/deploy-configs/{role}-webolith-secrets.yaml'.format(
-            role=role), 'w') as f:
-        f.write(yaml.dump(secret_template, default_flow_style=False))
-
-
-def build_macondo_secret(role):
-    with open('kubernetes/deploy-configs/macondo-secrets.yaml') as f:
-        secret_template = yaml.load(f)
-    for var_name in ['AUTH_KEY']:
-        secret_template['data'][var_name] = get_env_var(role, var_name, True)
-    with open('kubernetes/deploy-configs/{role}-macondo-secrets.yaml'.format(
             role=role), 'w') as f:
         f.write(yaml.dump(secret_template, default_flow_style=False))
 
@@ -161,19 +150,18 @@ def build_nginx_static_deployment(role):
         f.write(yaml.dump(deployment, default_flow_style=False))
 
 
-def build_macondo_deployment(role):
-    """ This will be called very rarely, so we'll make a function for it
-        here but not actually use it till later. """
-    with open('kubernetes/deploy-configs/macondo-deployment.yaml') as f:
+def build_word_db_server_deployment(role):
+    """ Build a deployment for the word_db_server program """
+    with open('kubernetes/deploy-configs/word-db-server-deployment.yaml') as f:
         template = f.read()
     context = {
-        'MACONDO_BUILD_NUM': os.getenv('CIRCLE_SHA1'),
-        'DAWG_PATH': os.getenv('DAWG_PATH'),
+        'WDB_SERVER_BUILD_NUM': os.getenv('CIRCLE_SHA1'),
+        'LEXICON_PATH': os.getenv('LEXICON_PATH'),
     }
     rendered = curlies_render(template, context)
     with open(
-        'kubernetes/deploy-configs/{role}-macondo-deployment.yaml'.format(
-            role=role), 'w') as f:
+        f'kubernetes/deploy-configs/{role}-word-db-server-deployment.yaml',
+            'w') as f:
         f.write(rendered)
 
 
