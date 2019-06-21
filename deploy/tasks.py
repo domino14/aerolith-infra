@@ -1,49 +1,29 @@
 import os
 
-from fabric.api import env, local, execute
+from invoke import task
 
 try:
     from kubernetes.build_configs import build, build_word_db_server
 except ImportError:
-    # In case we are in a container and we want to run fab.
+    # In case we are in a container and we want to run inv.
     # Note the container doesn't get the k8s stuff copied to it.
     print('Warning: Failed to import k8s build_configs')
 
 curdir = os.path.dirname(__file__)
 print(curdir)
 
-# Don't specify a filename for the key - circle will do the right thing?
-# env.key_filename = os.getenv("HOME") + "/.ssh/aerolith.pem"
-env.roledefs = {
-    'prod_db': ['ubuntu@159.203.220.140']
-}
 
-
-def create_k8s_configs(role):
-    execute(_create_k8s_configs, role)
-
-
-def create_k8s_configs_macondo(role):
-    execute(_create_k8s_configs_word_db_server, role)
-
-
-def _create_k8s_configs(role):
+@task
+def create_k8s_configs(c, role):
     build(role)
 
 
-def _create_k8s_configs_word_db_server(role):
+@task
+def create_k8s_configs_word_db_server(c, role):
     build_word_db_server(role)
 
 
-def deploy(role):
-    execute(_deploy, role)
-
-
-def deploy_word_db_server(role):
-    execute(_deploy_word_db_server, role)
-
-
-def _deploy(role):
+def deploy(c, role):
     """
     The main deployment function. k8s configs must already be created.
 
@@ -52,10 +32,10 @@ def _deploy(role):
     # kubectl --kubeconfig admin.conf apply -f whatever.yaml
     # etc.
     f = '{0}-webolith-migrate-job'.format(role)
-    local('kubectl delete --ignore-not-found=true job webolith-migrate')
-    local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
+    c.run('kubectl delete --ignore-not-found=true job webolith-migrate')
+    c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
     # Only proceed if the job was successful.
-    local('kubectl wait --for=condition=complete --timeout=30s '
+    c.run('kubectl wait --for=condition=complete --timeout=30s '
           'job/webolith-migrate')
 
     for f in [
@@ -67,14 +47,15 @@ def _deploy(role):
         'nginx-static-service',
         '{0}-webolith-maintenance'.format(role),
     ]:
-        local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
+        c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
 
 
-def _deploy_word_db_server(role):
+@task
+def deploy_word_db_server(role):
     for f in [
         '{0}-word-db-server-deployment'.format(role),
         'word-db-server-service',
         '{0}-word-db-server-secrets'.format(role)
     ]:
-        local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
+        c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
 
