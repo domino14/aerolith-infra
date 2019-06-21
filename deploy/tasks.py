@@ -23,6 +23,7 @@ def create_k8s_configs_word_db_server(c, role):
     build_word_db_server(role)
 
 
+@task
 def deploy(c, role):
     """
     The main deployment function. k8s configs must already be created.
@@ -58,4 +59,3 @@ def deploy_word_db_server(c, role):
         '{0}-word-db-server-secrets'.format(role)
     ]:
         c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
-
