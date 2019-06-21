@@ -51,7 +51,7 @@ def deploy(c, role):
 
 
 @task
-def deploy_word_db_server(role):
+def deploy_word_db_server(c, role):
     for f in [
         '{0}-word-db-server-deployment'.format(role),
         'word-db-server-service',
