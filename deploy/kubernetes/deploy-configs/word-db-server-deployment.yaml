@@ -45,6 +45,6 @@ spec:
       - name: lexica-vol
         hostPath:
           # Change this path to relevant lexicon path.
-          path: {{ LEXICON_PATH }}
+          path: {{ HOST_LEXICON_PATH }}
 
       restartPolicy: Always

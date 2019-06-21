@@ -156,7 +156,7 @@ def build_word_db_server_deployment(role):
         template = f.read()
     context = {
         'WDB_SERVER_BUILD_NUM': os.getenv('CIRCLE_SHA1'),
-        'LEXICON_PATH': os.getenv('LEXICON_PATH'),
+        'HOST_LEXICON_PATH': os.getenv('HOST_LEXICON_PATH'),
     }
     rendered = curlies_render(template, context)
     with open(
