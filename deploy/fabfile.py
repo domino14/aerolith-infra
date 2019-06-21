@@ -3,7 +3,7 @@ import os
 from fabric.api import env, local, execute
 
 try:
-    from kubernetes.build_configs import build, build_macondo
+    from kubernetes.build_configs import build, build_word_db_server
 except ImportError:
     # In case we are in a container and we want to run fab.
     # Note the container doesn't get the k8s stuff copied to it.
@@ -24,23 +24,23 @@ def create_k8s_configs(role):
 
 
 def create_k8s_configs_macondo(role):
-    execute(_create_k8s_configs_macondo, role)
+    execute(_create_k8s_configs_word_db_server, role)
 
 
 def _create_k8s_configs(role):
     build(role)
 
 
-def _create_k8s_configs_macondo(role):
-    build_macondo(role)
+def _create_k8s_configs_word_db_server(role):
+    build_word_db_server(role)
 
 
 def deploy(role):
     execute(_deploy, role)
 
 
-def deploy_macondo(role):
-    execute(_deploy_macondo, role)
+def deploy_word_db_server(role):
+    execute(_deploy_word_db_server, role)
 
 
 def _deploy(role):
@@ -70,11 +70,11 @@ def _deploy(role):
         local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
 
 
-def _deploy_macondo(role):
+def _deploy_word_db_server(role):
     for f in [
-        '{0}-macondo-deployment'.format(role),
-        'macondo-service',
-        '{0}-macondo-secrets'.format(role)
+        '{0}-word-db-server-deployment'.format(role),
+        'word-db-server-service',
+        '{0}-word-db-server-secrets'.format(role)
     ]:
         local('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
 
