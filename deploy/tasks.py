@@ -4,10 +4,10 @@ from invoke import task
 
 try:
     from kubernetes.build_configs import build, build_word_db_server
-except ImportError:
+except ImportError as e:
     # In case we are in a container and we want to run inv.
     # Note the container doesn't get the k8s stuff copied to it.
-    print('Warning: Failed to import k8s build_configs')
+    print('Warning: Failed to import k8s build_configs: ', e)
 
 curdir = os.path.dirname(__file__)
 print(curdir)
