@@ -25,7 +25,8 @@ def protoc(c):
                 f'protoc {fsjout} '
                 f'--twirp_python_out={py_out_path} '
                 f'--python_out={py_out_path} '
-                '--twirp_out=. --go_out=. '
+                '--twirp_out=paths=source_relative:. '
+                '--go_out=paths=source_relative:. '
                 f'./{full_path}')
             print(f'running command ... {cmd}')
             c.run(cmd)
