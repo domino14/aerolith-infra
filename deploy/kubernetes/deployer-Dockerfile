@@ -7,3 +7,5 @@ RUN apk update && apk upgrade && \
 RUN mkdir -p ~/.ssh
 # Need to add the following for use with circleci:
 RUN apk add git openssh
+# Bash needed for Python invoke 🙄
+RUN apk add --no-cache bash
