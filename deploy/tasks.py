@@ -56,6 +56,5 @@ def deploy_word_db_server(c, role):
     for f in [
         '{0}-word-db-server-deployment'.format(role),
         'word-db-server-service',
-        '{0}-word-db-server-secrets'.format(role)
     ]:
         c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
