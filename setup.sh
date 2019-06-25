@@ -21,7 +21,7 @@ echo "Checking out initial repos. Ensure you have an ssh key registered with git
 
 cwd=$(pwd)
 
-for repo in "webolith" "macondo" "word_db_server" "liwords"
+for repo in "webolith" "macondo" "word_db_server"
 do
     if [ ! -d $cwd/$repo ]; then
         git clone git@github.com:domino14/$repo
@@ -37,6 +37,7 @@ touch $cwd/webolith/config/local_config.env
 
 # cat >/dev/null <<GOTO_1
 
+# XXX: THIS IS BROKEN; FIX ME! THERE IS NO MORE MACONDO.
 echo "Bringing up macondo Docker container"
 
 docker-compose up -d macondo

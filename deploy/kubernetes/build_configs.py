@@ -31,11 +31,6 @@ def build(role):
         - nginx-service/deployment yamls
         - webolith-service/deployment yamls
 
-    For macondo service/deployment, deal with this in the future or in that
-    repository. That will change so rarely that we can probably deal with
-    it manually.
-
-
     """
 
     build_webolith_secret(role)
