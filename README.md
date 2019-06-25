@@ -13,8 +13,8 @@ Aerolith requires a number of components to run on your development machine.
 
 - Postgres: The postgres database (plain docker package)
 - Redis: Used for Django Channels (plain docker package)
-- Crosswords:  `github.com/domino14/liwords`  (3)
-    + This is an app to play Crossword Game, written in Elixir + Phoenix. I didn't choose those technologies to be a hipster, they were chosen after a lot of hard thought and experience with other techs for real-time games, such as Django Channels, Socket.io, Sock.js, and finding these to be lacking in several ways. Elixir is really quite a great language and ecosystem.
+<!-- - Crosswords:  `github.com/domino14/liwords`  (3)
+    + This is an app to play Crossword Game, written in Elixir + Phoenix. I didn't choose those technologies to be a hipster, they were chosen after a lot of hard thought and experience with other techs for real-time games, such as Django Channels, Socket.io, Sock.js, and finding these to be lacking in several ways. Elixir is really quite a great language and ecosystem. -->
 - Webpack servers: We use one for the Aerolith "Webapp" codebase and one for the Crosswords codebase. Maybe we can combine these. These are used to build the front-end JS for these apps.
 - Proxy: Used in order to have the Crosswords app easily get a JWT from the webapp within the same domain. Also, these will be on the same domain on prod. No, JWTs aren't bad if you're using them properly. I'm not using a regular session cookie because then I have to make the Elixir app understand unpickling of Django sessions (because I want to use my Django users for this app too), or log everyone out and rewrite those in JSON, but then I have to make it talk to the Django DB anyway to extend the expiry time of the session, etc etc. JWTs are fine. Mine expire after a few hours, stop making such a big deal about JWTs sucking.
 

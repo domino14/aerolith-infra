@@ -43,9 +43,10 @@ spec:
             value: {{ PGSQL_DB_NAME }}
           - name: PGSQL_USER
             value: {{ PGSQL_USER }}
-
-          - name: MACONDO_ADDRESS
-            value: {{ MACONDO_ADDRESS }}
+          # This is hard coded to be the name of the word db server in
+          # the kubernetes service description yaml file.
+          - name: WORD_DB_SERVER_ADDRESS
+            value: http://word-db-server:8180
           - name: RECAPTCHA_SSL
             value: 'on'
           - name: WORD_DB_LOCATION

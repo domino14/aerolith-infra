@@ -23,10 +23,9 @@ services:
     working_dir: /opt/webolith/djAerolith
     volumes:
       - ./webolith:/opt/webolith:rw
-      - ./lexica/db:/db
     depends_on:
       - pgdb
-      - redis
+      - word_db_server
     links:
       - pgdb
     command: python manage.py runserver 0.0.0.0:8000
@@ -37,13 +36,6 @@ services:
       - "traefik.webolith.frontend.rule=Host: vm.aerolith.org"
       - traefik.port=8000
       - traefik.enable=true
-
-  redis:
-    image: redis:alpine
-    ports:
-      - 6384:6379
-    networks:
-      - aeronet
 
   proxy:
     image: traefik:alpine
@@ -58,26 +50,6 @@ services:
       - /dev/null:/traefik.toml
     networks:
       - aeronet
-
-  macondo:
-    build:
-      context: ./macondo
-      dockerfile: Dockerfile-dev
-    environment:
-      AUTH_KEY: abcdef
-    volumes:
-      - ./lexica/dawg:/dawgs
-      - ./lexica/gaddag:/gaddags
-      - ./lexica:/lexica
-      - ./macondo:/go/src/github.com/domino14/macondo:rw
-    command: go run main.go -dawgpath=/dawgs/
-    networks:
-      - aeronet
-    labels:
-      - "traefik.backend=macondo"
-      - "traefik.macondo.frontend.rule=Host: vm.aerolith.org;PathPrefixStrip: /macondo/"
-      - traefik.port=8088
-      - traefik.enable=true
 
   word_db_server:
     build:
@@ -112,45 +84,6 @@ services:
       - "traefik.webpack_webolith.frontend.rule=Host: vm.aerolith.org;PathPrefix: /static/dist/,/sockjs-node/"
       - traefik.port=7000
       - traefik.enable=true
-
-  crosswords:
-    build: ./liwords
-    environment:
-      # Must match Django secret key. See setup.sh, where that is set.
-      # On prod obviously this will be handled differently.
-      DJANGO_SECRET_KEY: 0gc6=82_ehrw-@fv1a8dqq^6%zuxxu)f^5belgu68cuu*zr&qu
-    working_dir: /opt/liwords/liwords_ex
-    volumes:
-      - ./liwords:/opt/liwords:rw
-    depends_on:
-      - pgdb
-    links:
-      - pgdb
-    command: mix phx.server
-    networks:
-      - aeronet
-    labels:
-      - "traefik.backend=crosswords"
-      - "traefik.crosswords.frontend.rule=Host: vm.aerolith.org;PathPrefix: /crosswords"
-      - traefik.port=4000
-      - traefik.enable=true
-
-  webpack_crosswords:
-    build:
-      context: ./liwords
-      dockerfile: webpack.dockerfile
-    volumes:
-      - ./liwords:/opt/liwords:rw
-    working_dir: /opt/liwords
-    command: yarn dev:wds
-    networks:
-      - aeronet
-    labels:
-      - traefik.backend=webpack_webolith
-      - "traefik.webpack_webolith.frontend.rule=Host: vm.aerolith.org;PathPrefix: /crosswords/static/dist/,/sockjs-node/"
-      - traefik.port=7000
-      - traefik.enable=true
-
 
 volumes:
   pg-data-volume:

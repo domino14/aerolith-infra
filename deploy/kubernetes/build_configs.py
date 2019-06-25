@@ -81,7 +81,7 @@ def build_webolith_deployment(role):
         template = f.read()
 
     context = {}
-    for var_name in ['PGSQL_DB_NAME', 'PGSQL_USER', 'MACONDO_ADDRESS',
+    for var_name in ['PGSQL_DB_NAME', 'PGSQL_USER',
                      'SOCIAL_AUTH_FACEBOOK_KEY', 'INTERCOM_APP_ID',
                      'SOCIAL_AUTH_GOOGLE_OAUTH2_KEY']:
         context[var_name] = get_env_var(role, var_name)

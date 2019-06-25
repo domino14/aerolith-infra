@@ -6,6 +6,17 @@
 
 set -e
 
+echo "Trying to fetch lexica repo"
+
+{
+    git clone git@github.com:domino14/word-game-lexica ~/word-game-lexica &&
+    cp ~/word-game-lexica/*.txt $cwd/lexica
+} || {
+    echo "Could not check out lexica repo. You may not have access. "
+    echo "This will not work if you don't have at least one lexicon "
+    echo "inside the $cwd/lexica directory"
+}
+
 echo "Checking out initial repos. Ensure you have an ssh key registered with github."
 
 cwd=$(pwd)
@@ -32,7 +43,7 @@ docker-compose up -d macondo
 
 echo "Creating DAWGs and GADDAGs from lexica files..."
 
-for lex in "NWL18.txt" "CSW15.txt" "FISE2.txt"
+for lex in "NWL18.txt" "CSW19.txt" "FISE2.txt"
 do
     # Strip out extension.
     lex_name=${lex%.*}
@@ -88,7 +99,7 @@ USE_GA=off
 USE_FB=off
 
 USE_CAPTCHA=off
-MACONDO_ADDRESS=http://macondo:8088
+WORD_DB_SERVER_ADDRESS=http://word_db_server:8180
 RECAPTCHA_SSL=off
 WORD_DB_LOCATION=/db
 
