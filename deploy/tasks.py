@@ -32,6 +32,10 @@ def deploy(c, role):
     # To deploy,
     # kubectl --kubeconfig admin.conf apply -f whatever.yaml
     # etc.
+    # apply the secrets first. This is because the migrate job might
+    # depend on them.
+    c.run(f'kubectl apply -f kubernetes/deploy-configs/{role}-webolith-secrets.yaml')  # noqa
+    # Now try to migrate.
     f = '{0}-webolith-migrate-job'.format(role)
     c.run('kubectl delete --ignore-not-found=true job webolith-migrate')
     c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
@@ -40,12 +44,11 @@ def deploy(c, role):
           'job/webolith-migrate')
 
     for f in [
-        '{0}-webolith-secrets'.format(role),
-        '{0}-webolith-worker-deployment'.format(role),
         'webolith-service',
+        '{0}-webolith-worker-deployment'.format(role),
         '{0}-webolith-ingress'.format(role),
-        '{0}-nginx-static-deployment'.format(role),
         'nginx-static-service',
+        '{0}-nginx-static-deployment'.format(role),
         '{0}-webolith-maintenance'.format(role),
     ]:
         c.run('kubectl apply -f kubernetes/deploy-configs/{0}.yaml'.format(f))
