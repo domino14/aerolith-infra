@@ -6,6 +6,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   backend:
     # The default backend.
@@ -26,7 +27,7 @@ spec:
         backend:
           serviceName: nginx-static-svc
           servicePort: 80
-      - path: /word_db_server
+      - path: /word_db_server(/|$)(.*)
         backend:
           serviceName: word-db-server
           servicePort: 8180
@@ -37,7 +38,7 @@ spec:
         backend:
           serviceName: nginx-static-svc
           servicePort: 80
-      - path: /word_db_server
+      - path: /word_db_server(/|$)(.*)
         backend:
           serviceName: word-db-server
           servicePort: 8180
