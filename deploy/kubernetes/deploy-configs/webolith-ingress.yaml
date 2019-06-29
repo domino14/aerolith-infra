@@ -26,10 +26,10 @@ spec:
         backend:
           serviceName: nginx-static-svc
           servicePort: 80
-      - path: /macondo
+      - path: /word_db_server
         backend:
-          serviceName: macondo
-          servicePort: 8088
+          serviceName: word-db-server
+          servicePort: 8180
   - host: aerolith.org
     http:
       paths:
@@ -37,7 +37,7 @@ spec:
         backend:
           serviceName: nginx-static-svc
           servicePort: 80
-      - path: /macondo
+      - path: /word_db_server
         backend:
-          serviceName: macondo
-          servicePort: 8088
+          serviceName: word-db-server
+          servicePort: 8180

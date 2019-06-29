@@ -10,19 +10,20 @@ webolith_home = os.getenv('WEBOLITH_HOME',
 
 @task
 def protoc(c):
-    js_out = '--js_out=import_style=commonjs:' + path.join(
+    js_outpath = path.join(
         webolith_home, 'djAerolith', 'wordwalls', 'static', 'js', 'wordwalls',
         'gen')
-    for proto_path, proto_file, output_js in [
-        ('rpc/wordsearcher', 'searcher.proto', True),
-        ('rpc/anagrammer', 'anagrammer.proto', False),
+
+    js_out = (f'--js_out=import_style=commonjs,binary:{js_outpath} '
+              f'--twirp_js_out=binary:{js_outpath}')
+    for proto_path, proto_file in [
+        ('rpc/wordsearcher', 'searcher.proto'),
     ]:
         with c.cd('word_db_server'):
-            fsjout = js_out if output_js else ''
             full_path = path.join(proto_path, proto_file)
             py_out_path = path.join(webolith_home, 'djAerolith')
             cmd = (
-                f'protoc {fsjout} '
+                f'protoc {js_out} '
                 f'--twirp_python_out={py_out_path} '
                 f'--python_out={py_out_path} '
                 '--twirp_out=paths=source_relative:. '
