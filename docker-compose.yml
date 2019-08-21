@@ -9,6 +9,10 @@ services:
       POSTGRES_PASSWORD: pass
     volumes:
       - pg-data-volume:/var/lib/postgresql/data
+      # - /Users/cesar/Downloads:/opt/downloads
+    # load example:
+    # create database djaerolith_prod_backup;
+    # psql -U postgres djaerolith_prod_backup < /opt/downloads/backup_20190818-050001.sql
     expose:
       - 5432
     ports:
@@ -54,12 +58,13 @@ services:
   word_db_server:
     build:
       context: ./word_db_server
+      dockerfile: Dockerfile-dev
     environment:
       LEXICON_PATH: /lexica
       LOG_LEVEL: debug
     volumes:
       - ./lexica:/lexica
-      - ./word_db_server:/go/src/github.com/domino14/word_db_server:rw
+      - ./word_db_server:/opt/word_db_server:rw
     command: go run cmd/searchserver/main.go
     networks:
       - aeronet
