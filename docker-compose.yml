@@ -54,12 +54,13 @@ services:
   word_db_server:
     build:
       context: ./word_db_server
+      dockerfile: Dockerfile-dev
     environment:
       LEXICON_PATH: /lexica
       LOG_LEVEL: debug
     volumes:
       - ./lexica:/lexica
-      - ./word_db_server:/go/src/github.com/domino14/word_db_server:rw
+      - ./word_db_server:/opt/word_db_server:rw
     command: go run cmd/searchserver/main.go
     networks:
       - aeronet
