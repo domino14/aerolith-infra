@@ -118,19 +118,11 @@ docker-compose build app
 docker-compose run --rm app ./manage.py migrate
 docker-compose run --rm app ./manage.py createcachetable
 docker-compose run --rm app ./manage.py loaddata test/lexica.yaml
-docker-compose run --rm app ./manage.py loaddata dcNames
+docker-compose run --rm app ./manage.py loaddata challenge_names
 # Run yarn in both webpack containers
 
 docker-compose build webpack_webolith
 docker-compose run --rm webpack_webolith yarn
-docker-compose build webpack_crosswords
-docker-compose run --rm webpack_crosswords yarn
-
-# Run liwords elixir stuff
-
-docker-compose build crosswords
-docker-compose run --rm crosswords mix deps.get
-docker-compose run --rm crosswords mix ecto.migrate
 
 docker-compose stop
 
