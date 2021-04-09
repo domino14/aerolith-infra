@@ -21,7 +21,7 @@ echo "Checking out initial repos. Ensure you have an ssh key registered with git
 
 cwd=$(pwd)
 
-for repo in "webolith" "macondo" "word_db_server"
+for repo in "webolith" "word_db_server"
 do
     if [ ! -d $cwd/$repo ]; then
         git clone git@github.com:domino14/$repo
@@ -44,7 +44,7 @@ docker-compose up -d macondo
 
 echo "Creating DAWGs and GADDAGs from lexica files..."
 
-for lex in "NWL18.txt" "CSW19.txt" "FISE2.txt"
+for lex in "NWL20.txt" "CSW19.txt" "FISE2.txt"
 do
     # Strip out extension.
     lex_name=${lex%.*}
