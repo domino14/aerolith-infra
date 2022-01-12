@@ -9,9 +9,10 @@ services:
       POSTGRES_PASSWORD: pass
     volumes:
       - pg-data-volume:/var/lib/postgresql/data
-      # - /Users/cesar/Downloads:/opt/downloads
+      # - ${HOME}/Downloads:/opt/downloads
     # load example:
-    # create database djaerolith_prod_backup;
+    # uncomment the ${HOME}/Downloads and replace with your own desired location
+    # psql -U postgres -c 'create database djaerolith_prod_backup'
     # psql -U postgres djaerolith_prod_backup < /opt/downloads/backup_20190818-050001.sql
     expose:
       - 5432
@@ -63,7 +64,7 @@ services:
     environment:
       LEXICON_PATH: /lexica
       LETTER_DISTRIBUTION_PATH: /lexica/letterdistributions
-      LOG_LEVEL: debug
+      LOG_LEVEL: info
     volumes:
       - ./lexica:/lexica
       - ./word_db_server:/opt/word_db_server:rw
@@ -85,11 +86,10 @@ services:
     volumes:
       - ./webolith:/opt/webolith:rw
     working_dir: /opt/webolith
-    command: yarn dev:wds
     networks:
       - aeronet
     labels:
-      - "traefik.http.routers.webpack_webolith.rule=Host(`aerolith.localhost`) && PathPrefix(`/static/dist`,`/sockjs-node/`)"
+      - "traefik.http.routers.webpack_webolith.rule=Host(`aerolith.localhost`) && PathPrefix(`/static/dist`,`/ws`)"
       - "traefik.http.services.webpack_webolith.loadbalancer.server.port=7000"
       - traefik.enable=true
 
