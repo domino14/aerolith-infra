@@ -7,10 +7,11 @@
 set -e
 
 echo "Trying to fetch lexica repo"
+cwd=$(pwd)
 
 {
     git clone git@github.com:domino14/word-game-lexica ./word-game-lexica &&
-    cp ~/word-game-lexica/*.txt $cwd/lexica
+    cp ./word-game-lexica/*.txt $cwd/lexica
 } || {
     echo "Could not check out lexica repo. You may not have access. "
     echo "This will not work if you don't have at least one lexicon "
@@ -19,7 +20,6 @@ echo "Trying to fetch lexica repo"
 
 echo "Checking out initial repos. Ensure you have an ssh key registered with github."
 
-cwd=$(pwd)
 
 for repo in "webolith" "word_db_server"
 do
