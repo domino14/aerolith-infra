@@ -10,16 +10,17 @@ services:
     volumes:
       - pg-data-volume:/var/lib/postgresql/data
       # - ${HOME}/Downloads:/opt/downloads
-    # load example:
-    # uncomment the ${HOME}/Downloads and replace with your own desired location
-    # psql -U postgres -c 'create database djaerolith_prod_backup'
-    # psql -U postgres djaerolith_prod_backup < /opt/downloads/backup_20190818-050001.sql
+      # load example:
+      # uncomment the ${HOME}/Downloads and replace with your own desired location
+      # psql -U postgres -c 'create database djaerolith_prod_backup'
+      # psql -U postgres djaerolith_prod_backup < /opt/downloads/backup_20190818-050001.sql
     expose:
       - 5432
     ports:
       - 5437:5432
     networks:
       aeronet:
+
 
   app:
     env_file:
@@ -64,11 +65,11 @@ services:
     environment:
       LEXICON_PATH: /lexica
       LETTER_DISTRIBUTION_PATH: /lexica/letterdistributions
-      LOG_LEVEL: info
+      LOG_LEVEL: debug
     volumes:
       - ./lexica:/lexica
       - ./word_db_server:/opt/word_db_server:rw
-    command: sh -c "go run -race cmd/searchserver/main.go"
+    command: sh -c "go run -race cmd/searchserver/*.go"
     networks:
       - aeronet
     labels:

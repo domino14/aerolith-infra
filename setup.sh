@@ -9,7 +9,7 @@ set -e
 echo "Trying to fetch lexica repo"
 
 {
-    git clone git@github.com:domino14/word-game-lexica ~/word-game-lexica &&
+    git clone git@github.com:domino14/word-game-lexica ./word-game-lexica &&
     cp ~/word-game-lexica/*.txt $cwd/lexica
 } || {
     echo "Could not check out lexica repo. You may not have access. "
@@ -37,37 +37,6 @@ touch $cwd/webolith/config/local_config.env
 
 # cat >/dev/null <<GOTO_1
 
-# XXX: THIS IS BROKEN; FIX ME! THERE IS NO MORE MACONDO.
-echo "Bringing up macondo Docker container"
-
-docker-compose up -d macondo
-
-echo "Creating DAWGs and GADDAGs from lexica files..."
-
-for lex in "NWL20.txt" "CSW19.txt" "FISE2.txt"
-do
-    # Strip out extension.
-    lex_name=${lex%.*}
-
-    # Send an RPC command to Macondo to build DAWGs from these lexicon files.
-    json_builder='{"jsonrpc":"2.0","method":"GaddagService.%s","params":{"filename":"%s","minimize":true,"authToken":"abcdef"},"id":%s}'
-
-    # If the lexicon text file exists, generate a dawg and a goddamn for it.
-    if [ -f $cwd/lexica/$lex ]; then
-        rpc_str=$(printf $json_builder "GenerateDawg" "/lexica/$lex" "$RANDOM" )
-        echo "Sending" $rpc_str
-        curl -v localhost:8088/rpc -H "Content-Type: application/json" -d $rpc_str
-        docker-compose exec macondo mv out.dawg /dawgs/$lex_name.dawg
-
-        # Also make the GADDAG as the database maker needs it.
-        rpc_str=$(printf $json_builder "Generate" "/lexica/$lex" "$RANDOM" )
-        curl -v localhost:8088/rpc -H "Content-Type: application/json" -d $rpc_str
-        docker-compose exec macondo mv out.gaddag /gaddags/$lex_name.gaddag
-    fi
-done
-
-docker-compose stop macondo
-
 echo "Creating word databases"
 
 docker build -t domino14/word_db_server -f word_db_server/Dockerfile word_db_server
@@ -76,7 +45,8 @@ docker run --rm \
     -v $cwd/lexica:/lexica \
     -v $cwd/lexica/db:/db \
     -e LEXICON_PATH=/lexica/ \
-    domino14/word_db_server ./word_db_server -outputdir /db
+    -e LETTER_DISTRIBUTION_PATH=/lexica/letterdistributions \
+    domino14/word_db_server ./dbmaker -dbs NWL20,CSW21 -outputdir /db
 
 # GOTO_1
 
@@ -119,11 +89,7 @@ docker-compose run --rm app ./manage.py migrate
 docker-compose run --rm app ./manage.py createcachetable
 docker-compose run --rm app ./manage.py loaddata test/lexica.yaml
 docker-compose run --rm app ./manage.py loaddata challenge_names
-# Run yarn in both webpack containers
-
-docker-compose build webpack_webolith
-docker-compose run --rm webpack_webolith yarn
 
 docker-compose stop
 
-echo "All ready! You can now type docker-compose up -d to bring up the environment."
+echo "All ready! You can now type docker-compose up to bring up the environment."

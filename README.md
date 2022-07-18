@@ -29,7 +29,7 @@ AB an abdomen
 AARDVARK a funny animal
 ```
 
-Put these text files in the `lexica` directory. For now, they should be named `NWL18.txt`, `CSW15.txt`, `FISE2.txt`. You don't need all of them to have Aerolith run but it might be crippled if you try to select a lexicon you don't have.
+Put these text files in the `lexica` directory. For now, they should be named `NWL20.txt`, `CSW21.txt`, etc. You don't need all of them to have Aerolith run but it might be crippled if you try to select a lexicon you don't have.
 
 - Download and install Docker for <Your operating system here>
 
