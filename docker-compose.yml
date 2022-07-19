@@ -86,6 +86,8 @@ services:
       dockerfile: webpack.dockerfile
     volumes:
       - ./webolith:/opt/webolith:rw
+      # Install node_modules inside the docker container
+      - "/opt/webolith/node_modules"
     working_dir: /opt/webolith
     networks:
       - aeronet
