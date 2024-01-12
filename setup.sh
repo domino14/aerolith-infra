@@ -10,12 +10,14 @@ echo "Trying to fetch lexica repo"
 cwd=$(pwd)
 
 {
-    git clone git@github.com:domino14/word-game-lexica ./word-game-lexica &&
-    cp ./word-game-lexica/*.txt $cwd/lexica
+    git clone --depth 1 git@github.com:domino14/word-game-lexica ./word-game-lexica &&
+    cp ./word-game-lexica/*.txt $cwd/lexica &&
+    cp ./word-game-lexica/kwg/*.kwg $cwd/lexica/gaddag
 } || {
     echo "Could not check out lexica repo. You may not have access. "
     echo "This will not work if you don't have at least one lexicon "
-    echo "inside the $cwd/lexica directory"
+    echo "inside the $cwd/lexica directory, and the corresponding .kwg "
+    echo "inside the $cwd/lexica/gaddag directory. See README for more info."
 }
 
 echo "Checking out initial repos. Ensure you have an ssh key registered with github."

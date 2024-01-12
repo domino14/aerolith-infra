@@ -31,12 +31,22 @@ AARDVARK a funny animal
 
 Put these text files in the `lexica` directory. For now, they should be named `NWL20.txt`, `CSW21.txt`, etc. You don't need all of them to have Aerolith run but it might be crippled if you try to select a lexicon you don't have.
 
+- You will also need to compile these lexica files into *.kwg files. These are Kurnia Word Graphs, made by Andy Kurnia. See this repo:
+
+https://github.com/andy-k/wolges
+
+In particular, once you clone it, you can run:
+
+`cargo run --release --bin buildlex -- english-kwg CSW21.txt CSW21.kwg` (for example)
+
+Put the *.kwg files inside the `lexica/gaddag` directory. A future version of this script will auto-build the *.kwg files.
+
 - Download and install Docker for <Your operating system here>
 
 - If you create a Docker Hub account, you must logout of it via the command line with `docker logout`. This is a bizarre issue with Docker: https://github.com/docker/hub-feedback/issues/1098
   (You can't pull containers otherwise.)
 
-- Run `setup.sh`. This will clone the 4 repos above, build your lexicon databases, install all required Javascript and initialize your postgres database, among other tasks.
+- Run `setup.sh`. This will clone the 3 repos above, build your lexicon databases, install all required Javascript and initialize your postgres database, among other tasks.
 
 - Add `aerolith.localhost` to your `etc/hosts` file. The entry should look something like this, depending on your Docker settings.
 
