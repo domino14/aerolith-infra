@@ -6,6 +6,7 @@ word_db_server
 lexica/*.txt
 lexica/dawg/*.dawg
 lexica/gaddag/*.gaddag
+lexica/gaddag/*.kwg
 lexica/db/*.db
 lexica/difficulty
 .vscode

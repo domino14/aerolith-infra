@@ -2,7 +2,7 @@ version: "3"
 
 services:
   pgdb:
-    image: postgres
+    image: postgres:14
     environment:
       POSTGRES_DB: djaerolith
       POSTGRES_USER: postgres
