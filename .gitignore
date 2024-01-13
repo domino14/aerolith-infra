@@ -1,7 +1,6 @@
-liwords
-macondo
 webolith
 word_db_server
+word-game-lexica
 
 lexica/*.txt
 lexica/dawg/*.dawg

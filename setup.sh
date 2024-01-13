@@ -44,10 +44,10 @@ echo "Creating word databases"
 docker build -t domino14/word_db_server -f word_db_server/Dockerfile word_db_server
 
 docker run --rm \
-    -v $cwd/lexica:/lexica \
+    -v $cwd/lexica:/opt/data/lexica \
+    -v $cwd/letterdistributions:/opt/data/letterdistributions \
     -v $cwd/lexica/db:/db \
-    -e LEXICON_PATH=/lexica/ \
-    -e LETTER_DISTRIBUTION_PATH=/lexica/letterdistributions \
+    -e WDB_DATA_PATH=/opt/data \
     domino14/word_db_server ./dbmaker -dbs NWL20,CSW21 -outputdir /db
 
 # GOTO_1

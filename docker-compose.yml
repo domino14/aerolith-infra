@@ -63,11 +63,11 @@ services:
       context: ./word_db_server
       dockerfile: Dockerfile-dev
     environment:
-      LEXICON_PATH: /lexica
-      LETTER_DISTRIBUTION_PATH: /lexica/letterdistributions
+      WDB_DATA_PATH: /opt/data
       LOG_LEVEL: debug
     volumes:
-      - ./lexica:/lexica
+      - ./lexica:/opt/data/lexica
+      - ./letterdistributions:/opt/data/letterdistributions
       - ./word_db_server:/opt/word_db_server:rw
     command: sh -c "go run -race cmd/searchserver/*.go"
     networks:
