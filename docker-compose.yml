@@ -65,6 +65,12 @@ services:
     environment:
       WDB_DATA_PATH: /opt/data
       LOG_LEVEL: debug
+      # this secret key is the same one as in the local_config.env in
+      # webolith. These should match.
+      SECRET_KEY: "0gc6=82_ehrw-@fv1a8dqq^6%zuxxu)f^5belgu68cuu*zr&qu"
+      DB_MIGRATIONS_PATH: file:///opt/word_db_server/db/migrations
+      # These db parameters should match the ones in local_config.env
+      DB_CONN_URI: postgres://postgres:pass@pgdb:5432/djaerolith?sslmode=disable
     volumes:
       - ./lexica:/opt/data/lexica
       - ./letterdistributions:/opt/data/letterdistributions
