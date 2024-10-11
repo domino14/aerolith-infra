@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   pgdb:
     image: postgres:14
@@ -101,6 +99,26 @@ services:
       - "traefik.http.routers.webpack_webolith.rule=Host(`aerolith.localhost`) && PathPrefix(`/static/dist`,`/ws`)"
       - "traefik.http.services.webpack_webolith.loadbalancer.server.port=7000"
       - traefik.enable=true
+
+  vite_webolith:
+    # Vite is what we will slowly move towards. For now it's just the
+    # wordvault flashcard app.
+    build:
+      context: ./webolith/frontend
+      dockerfile: Dockerfile-dev
+    volumes:
+      - ./webolith/frontend:/opt/webolith-fe
+    working_dir: /opt/webolith-fe
+    command: bash -c "npm install && npm run dev -- --host"
+    networks:
+      - aeronet
+    labels:
+      - traefik.enable=true
+      - "traefik.http.routers.webolith-fe.rule=Host(`aerolith.localhost`) && PathPrefix(`/wordvault`)"
+      - "traefik.http.routers.webolith-fe.service=webolith-fe-service"
+      - "traefik.http.routers.webolith-fe.entrypoints=web"
+      - "traefik.http.services.webolith-fe-service.loadbalancer.server.port=5173"
+
 
 volumes:
   pg-data-volume:
