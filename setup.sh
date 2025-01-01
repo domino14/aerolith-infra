@@ -48,7 +48,7 @@ docker run --rm \
     -v $cwd/letterdistributions:/opt/data/letterdistributions \
     -v $cwd/lexica/db:/db \
     -e WDB_DATA_PATH=/opt/data \
-    domino14/word_db_server ./dbmaker -dbs NWL20,CSW21 -outputdir /db
+    domino14/word_db_server ./dbmaker -dbs NWL23,CSW21 -outputdir /db
 
 # GOTO_1
 
