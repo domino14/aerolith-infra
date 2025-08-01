@@ -84,23 +84,27 @@ services:
       - "traefik.http.services.word_db_server.loadbalancer.server.port=8180"
       - traefik.enable=true
 
-  webpack_webolith:
+  vite_wordwalls:
     build:
       context: ./webolith
-      dockerfile: webpack.dockerfile
+      dockerfile: wordwalls.dockerfile
     volumes:
       - ./webolith:/opt/webolith:rw
-      # Install node_modules inside the docker container
-      - "/opt/webolith/node_modules"
     working_dir: /opt/webolith
+    command: bash -c "npm install && npm run dev:wordwalls -- --host"
     networks:
       - aeronet
+    ports:
+      - "8097:8097"
     labels:
-      - "traefik.http.routers.webpack_webolith.rule=Host(`aerolith.localhost`) && PathPrefix(`/static/dist`,`/ws`)"
-      - "traefik.http.services.webpack_webolith.loadbalancer.server.port=7000"
+      - "traefik.http.routers.vite_wordwalls.rule=Host(`aerolith.localhost`) && PathPrefix(`/static/js/wordwalls`)"
+      - "traefik.http.routers.vite_wordwalls.priority=100"
+      - "traefik.http.routers.vite_wordwalls.service=vite_wordwalls-service"
+      - "traefik.http.services.vite_wordwalls-service.loadbalancer.server.port=8097"
+      - "traefik.http.routers.vite_wordwalls.entrypoints=web"
       - traefik.enable=true
 
-  vite_webolith:
+  vite_wordvault:
     # Vite is what we will slowly move towards. For now it's just the
     # wordvault flashcard app.
     build:
@@ -114,11 +118,31 @@ services:
       - aeronet
     labels:
       - traefik.enable=true
-      - "traefik.http.routers.webolith-fe.rule=Host(`aerolith.localhost`) && PathPrefix(`/wordvault`)"
-      - "traefik.http.routers.webolith-fe.service=webolith-fe-service"
-      - "traefik.http.routers.webolith-fe.entrypoints=web"
-      - "traefik.http.services.webolith-fe-service.loadbalancer.server.port=5173"
+      - "traefik.http.routers.vite_wordvault.rule=Host(`aerolith.localhost`) && PathPrefix(`/wordvault`)"
+      - "traefik.http.routers.vite_wordvault.service=vite_wordvault-service"
+      - "traefik.http.routers.vite_wordvault.entrypoints=web"
+      - "traefik.http.services.vite_wordvault-service.loadbalancer.server.port=5173"
 
+  legacy_flashcards:
+    build:
+      context: ./webolith
+      dockerfile: wordwalls.dockerfile
+    volumes:
+      - ./webolith/djAerolith/flashcards:/opt/webolith/flashcards:rw
+    working_dir: /opt/webolith/flashcards
+    command: bash -c "npm install && npm run dev"
+    networks:
+      - aeronet
+    ports:
+      - "8089:8089"
+    labels:
+      - "traefik.http.routers.legacy_flashcards.rule=Host(`aerolith.localhost`) && PathPrefix(`/static/js/flashcards`)"
+      - "traefik.http.routers.legacy_flashcards.service=legacy_flashcards-service"
+      - "traefik.http.services.legacy_flashcards-service.loadbalancer.server.port=8089"
+      - "traefik.http.routers.legacy_flashcards.entrypoints=web"
+      - traefik.enable=true
+      - "traefik.http.middlewares.flashcards-stripprefix.stripprefix.prefixes=/static/js/flashcards"
+      - "traefik.http.routers.legacy_flashcards.middlewares=flashcards-stripprefix"
 
 volumes:
   pg-data-volume:
