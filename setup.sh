@@ -12,7 +12,7 @@ cwd=$(pwd)
 {
     git clone --depth 1 git@github.com:domino14/word-game-lexica ./word-game-lexica &&
     cp ./word-game-lexica/*.txt $cwd/lexica &&
-    cp ./word-game-lexica/kwg/*.kwg $cwd/lexica/gaddag
+    ./word-game-lexica/build_kwgs.sh $cwd/lexica/gaddag America CSW15 CSW19 CSW21 CSW24 DISC2 ECWL FISE2 FRA20 FRA24 NSF22 NWL18 NWL20 NWL23 OSPS49 OSPS50 RD28
 } || {
     echo "Could not check out lexica repo. You may not have access. "
     echo "This will not work if you don't have at least one lexicon "
